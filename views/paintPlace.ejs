@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рисуйте вместе!</title>
+
+    <link rel="stylesheet" href="/public/css/drawing.css">
+
+    <!-- color picker -->
+    <link rel="stylesheet" href="https://unpkg.com/alwan/dist/css/alwan.min.css">
+    <script src="https://unpkg.com/alwan/dist/js/alwan.min.js"></script>
+</head>
+<body>
+    <name id="name"><%= name %></name>
+
+    <div class="panel" id="toolsPanel"></div>
+
+    <div class="drawing-place">
+        <svg class="drawing-place-svg" id="drawingPlaceSvg"></svg>
+    </div>
+
+    <div class="user-list" id="userList"></div>
+
+
+    <div id="colorPickerMenu"></div>
+
+    <div id="optionsMenu">
+        <div>a</div>
+        <div>s</div>
+        <div>d</div>
+        <div>f</div>
+        <div>g</div>
+    </div>
+
+    <div id="rotation">
+        <div>
+            <div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/public/script/generateToolsPanel.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/public/script/toolsListeners.js"></script>
+    <script src="/public/script/paint.js" language="javascript"></script>
+</body>
+</html>

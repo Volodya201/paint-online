@@ -1,0 +1,16 @@
+.info {
+    width: 42px;
+    height: 42px;
+}
+
+.info * {
+    fill: none;
+    stroke: #cfcfcf;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: all 0.3s linear;
+}
+
+.info:hover * {
+    stroke: #15dac3;
+}

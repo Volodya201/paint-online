@@ -1,0 +1,130 @@
+@import url(/public/font/Rubik/static/Rubik-Light.ttf);
+
+#name {
+    display: none;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Rubik', sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+}
+
+.panel {
+    background: rgb(0,0,0);
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,55,45,1) 100%);
+    user-select: none;
+}
+
+.panel-element {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.panel-icon {
+    transform: scale(2.5);
+}
+
+.panel-hr {
+    width: 80%;
+    height: 1px;
+    background-color: #fff;
+}
+
+#colorPickerMenu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.drawing-place {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drawing-place-svg {
+    width: 1200px;
+    height: 700px;
+    box-shadow: 0 0 35px #cfcfcf;
+    border-radius: 13px;
+}
+
+
+
+.user-list {
+    min-width: 260px;
+    user-select: none;
+}
+
+
+#optionsMenu {
+    background: rgb(0,0,0);
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,55,45,1) 100%);
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    border-radius: 5px;
+    display: flex;
+    font-size: 35px;
+    padding: 10px;
+    gap: 15px;
+    color: #fff;
+}
+
+
+
+#rotation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #cfcfcf;
+    border-radius: 50%;
+}
+
+#rotation div {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    scale: 1.25;
+}
+
+#rotation div div {
+    border: 2px solid #cfcfcf;
+    border-radius: 50%;
+    background: rgb(0,0,0);
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,55,45,1) 100%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scale: 0.95;
+}
+
+#rotation div div div {
+    border-radius: 50%;
+    background: #fff;
+    width: 15px;
+    height: 15px;
+    border: none;
+}

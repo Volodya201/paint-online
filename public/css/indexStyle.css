@@ -1,0 +1,154 @@
+@import url(/public/font/Rubik/static/Rubik-Light.ttf);
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Rubik', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    width: min(100%, 700px);
+    height: min(70%, 500px);
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 0 10px #cfcfcf;
+    padding: 15px;
+    transition: all 0.3s linear;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.content:hover {
+    box-shadow: 0 0 35px #cfcfcf;
+}
+
+.welcome {
+    font-size: 60px;
+    color: transparent;    
+	-webkit-background-clip: text;
+	background-clip: text;
+	background-image: linear-gradient(315deg, rgb(50, 203, 249), rgb(43, 248, 173));
+    -webkit-text-stroke: 2px #000;
+    margin: 10px 0;
+}
+
+.about {
+    font-size: 40px;
+    margin: 10px 0;
+}
+
+hr {
+    width: 50%;
+    height: 5px;
+    border: none;
+    background-color:#cfcfcf;
+    border-radius: 3px;
+}
+
+.button {
+    display: inline-block;
+    height: 50px;
+    padding: 5px 10px;
+    background-image: linear-gradient(315deg, rgb(50, 203, 249), rgb(43, 248, 173));
+    font-size: 40px;
+    color: #000;
+    border-radius: 15px;
+    transition: all 0.3s linear;
+    margin: 10px 0;
+    border: none;
+}
+
+button.button {
+    height: 60px !important;
+}
+
+.button:hover, .button:focus {
+    background-image: linear-gradient(135deg, rgb(50, 203, 249), rgb(43, 248, 173));
+    outline: none;
+    transform: scale(1.02);
+}
+
+.input {
+    text-align: center;
+    height: 50px;
+    margin: 10px 0;
+    padding: 5px 10px;
+    font-size: 40px;
+    outline: none;
+    border: none;
+    border-bottom: 3px solid #cfcfcf;
+    transition: all 0.3s linear;
+}
+
+.input:focus {
+    border-bottom-color: rgb(50, 203, 249);
+}
+
+.inputBlock {
+    position: relative;
+}
+
+.info {
+    position: absolute;
+    top: 40px;
+    right: min(2%, 10px);
+    transform: translate(0, -50%);
+}
+
+#status {
+    font-size: 25px;
+    color: red;
+    margin: 0;
+}
+
+
+.blackout {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+}
+
+
+.info-popup {
+    position: absolute;
+    z-index: 1001;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    border-radius: 15px;
+    background-color: #fff;
+    width: min(90%, 600px);
+    height: min(300px, 70vh);
+    text-align: center;
+    display: none;
+}
+
+.popup-title {
+    font-size: 35px;
+}
+
+.popup-rule {
+    font-size: 25px;
+}
