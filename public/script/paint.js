@@ -1,13 +1,3 @@
-const socket = io()
-
-const drawingPlaceSvg = document.getElementById("drawingPlaceSvg")
-const name = document.getElementById("name").innerText
-const userList = document.getElementById("userList")
-let activeColor = "#000000"
-let activeStrokeColor = "#000000"
-let activeStrokeWidth = 0
-let anglesQuantity = 4
-
 socket.emit("newUser", {name: name})
 
 socket.on("refreshUsers", data => {
@@ -61,8 +51,7 @@ let nowWorkingObject
 let nowWorkingObjectId
 let startX
 let startY
-let lastEvent = {offsetX: 0, offsetY: 0}
-
+rotation.init(getCoords(drawingPlaceSvg))
 
 function generateRandomCode() {
     let code = ""
@@ -84,12 +73,13 @@ drawingPlaceSvg.addEventListener("mousedown", event => {
     if (activeTool === "square") socket.emit("addFigure", squareMousedown(event))
     if (activeTool === "ellipse") socket.emit("addFigure", ellipseMousedown(event))
     if (activeTool === "polygon") socket.emit("addFigure", polygonMousedown(event))
+    if (activeTool === "line") socket.emit("addFigure", lineMousedown(event))
 
     nowWorkingObject = document.getElementById(nowWorkingObjectId)
 
-    nowWorkingObject.style.fill = activeColor
-    nowWorkingObject.style.stroke = activeStrokeColor
-    nowWorkingObject.style.strokeWidth = activeStrokeWidth
+    nowWorkingObject.setAttribute("fill", activeColor)
+    nowWorkingObject.setAttribute("stroke", activeStrokeColor)
+    nowWorkingObject.setAttribute("stroke-width", activeStrokeWidth)
 })
 
 drawingPlaceSvg.addEventListener("mousemove", event => {
@@ -98,15 +88,30 @@ drawingPlaceSvg.addEventListener("mousemove", event => {
     if (activeTool === "square") socket.emit("editFigure", squareMousemove(event))
     if (activeTool === "ellipse") socket.emit("editFigure", ellipseMousemove(event))
     if (activeTool === "polygon") socket.emit("editFigure", polygonMousemove(event))
+    if (activeTool === "line") socket.emit("editFigure", lineMousemove(event))
     
 })
 
 document.addEventListener("mouseup", event => {
+    if (mousedown === false) return
     mousedown = false
 
-    if (activeTool === "select") selectObject(event.target)
-
-    if (activeTool === "clearAll") socket.emit("clearAll")
+    switch (activeTool) {
+        case "select":
+            selectObject(event.target)
+            break
+        default:
+            rotation.show({
+                    center: {
+                        x: nowWorkingObject.dataset.x,
+                        y: nowWorkingObject.dataset.y
+                    }
+                },
+                getCoords(rotation.rotationSlider),
+                nowWorkingObject.dataset.rotation
+            )
+            break
+    }
 })
 
 
@@ -129,45 +134,23 @@ document.addEventListener("keypress", event => {
 
 
 function changeTool(toolName) {
-    activeTool = toolName
+    if (toolName === "settings") {
+        openPopup()
+        return
+    }
+
+
+    switch (toolName) {
+        case "settings":
+            openPopup()
+            break
+
+        case "clearAll":
+            socket.emit("clearAll")
+            break
+
+        default:
+            activeTool = toolName
+            break
+    }
 }
-
-
-
-
-
-
-
-
-const colorPicker = new Alwan('#colorPicker', {
-    id: 'colorPicker',
-    classname: '',
-    theme: 'dark',
-    toggle: true,
-    popover: true,
-    position: 'left-end',
-    margin: 16,
-    preset: true,
-    color: '#000',
-    default: '#000',
-    disabled: false,
-    format: 'rgb',
-    singleInput: false,
-    inputs: {
-        rgb: true,
-        hex: true,
-        hsl: false,
-    },
-    opacity: true,
-    preview: true,
-    closeOnScroll: false,
-    copy: true,
-    swatches: ["#ff0000", "#00ff00", "#0000ff"],
-    toggleSwatches: false, 
-    shared: false, 
-    closeOnScroll: false,
-    
-})
-
-
-colorPicker.on('change', (color) => {activeColor = color.rgb})

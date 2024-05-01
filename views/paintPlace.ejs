@@ -25,25 +25,39 @@
 
     <div id="colorPickerMenu"></div>
 
-    <div id="optionsMenu">
+    <!-- <div id="optionsMenu">
         <div>a</div>
         <div>s</div>
         <div>d</div>
         <div>f</div>
         <div>g</div>
-    </div>
+    </div> -->
 
     <div id="rotation">
-        <div>
+        <div id="rotationController">
             <div>
                 <div></div>
             </div>
         </div>
     </div>
 
+    <div class="settings-popup" id="settingsPopup">
+        <h1 class="popup-title">Настройки</h1>
+
+        <label class="checkbox" for="inDetailsToollist">
+            <input class="checkbox-input" type="checkbox" id="inDetailsToollist" checked>
+            <span Class="checkbox-inner">Подробный toollist</span>
+        </label>
+    </div>
+
+    <div class="blackout" id="blackout"></div>
+
 
     <script src="/public/script/generateToolsPanel.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/public/script/init.js"></script>
+    <script src="/public/script/toolsPanel.js"></script>
+    <script src="/public/script/rotationFigures.js"></script>
     <script src="/public/script/toolsListeners.js"></script>
     <script src="/public/script/paint.js" language="javascript"></script>
 </body>

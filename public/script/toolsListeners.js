@@ -6,6 +6,8 @@ function squareMousedown(event) {
         width="1" 
         height="1" 
         id="${nowWorkingObjectId}" 
+        data-x="${event.offsetX + 0.5}"
+        data-y="${event.offsetY + 0.5}"
         data-right="1337" />
     `
     drawingPlaceSvg.innerHTML += html
@@ -19,22 +21,39 @@ function squareMousedown(event) {
 function squareMousemove(event) {
     let xOffset = event.offsetX - startX
     let yOffset = event.offsetY - startY
+    let x
+    let width
+    let y
+    let height
+    let centerX
+    let centerY
 
     if (xOffset < 0) {
-        nowWorkingObject.setAttribute("x", event.offsetX)
-        nowWorkingObject.setAttribute("width", startX - event.offsetX)
+        x = event.offsetX
+        width = startX - event.offsetX
+        centerX = event.offsetX + (startX - event.offsetX) / 2
     } else {
-        nowWorkingObject.setAttribute("x", startX)
-        nowWorkingObject.setAttribute("width", xOffset)
+        x = startX
+        width = xOffset
+        centerX = startX + xOffset / 2
     }
 
     if (yOffset < 0) {
-        nowWorkingObject.setAttribute("y", event.offsetY)
-        nowWorkingObject.setAttribute("height", startY - event.offsetY)
+        y = event.offsetY
+        height = startY - event.offsetY
+        centerY = event.offsetY + (startY - event.offsetY) / 2
     } else {
-        nowWorkingObject.setAttribute("y", startY)
-        nowWorkingObject.setAttribute("height", yOffset)
+        y = startY
+        height = yOffset
+        centerY = startY + yOffset / 2
     }
+
+    nowWorkingObject.setAttribute("x", x)
+    nowWorkingObject.setAttribute("width", width)
+    nowWorkingObject.setAttribute("y", y)
+    nowWorkingObject.setAttribute("height", height)
+    nowWorkingObject.dataset.x = centerX
+    nowWorkingObject.dataset.y = centerY
 
     return {
         html: nowWorkingObject.outerHTML,
@@ -49,6 +68,8 @@ function ellipseMousedown(event) {
         cy="${startY}" 
         r="1" 
         id="${nowWorkingObjectId}" 
+        data-x="${startX}"
+        data-y="${startY}"
         data-right="1337" />
     `
     drawingPlaceSvg.innerHTML += html
@@ -60,9 +81,8 @@ function ellipseMousedown(event) {
 }
 
 function ellipseMousemove(event) {
-    let xOffset = Math.pow(Math.abs(event.offsetX - startX), 2)
-    let yOffset = Math.pow(Math.abs(event.offsetY - startY), 2)
-    let offset = Math.floor(Math.sqrt(xOffset + yOffset))
+    const offset = getOffset(event)
+
     nowWorkingObject.setAttribute("r", offset)
 
     return {
@@ -78,6 +98,8 @@ function polygonMousedown(event) {
         <polygon 
         points="${startX + 1},${startY} ${startX},${startY + 1} ${startX + 1},${startY + 1}" 
         id="${nowWorkingObjectId}" 
+        data-x="${startX}"
+        data-y="${startY}"
         data-right="1337" />
     `
 
@@ -88,20 +110,15 @@ function polygonMousedown(event) {
         id: nowWorkingObjectId
     }
 }
-let smth = 60
-function polygonMousemove(event) {
-    console.log(event)
-    lastEvent = event
 
-    let xOffset = Math.pow(Math.abs(event.offsetX - startX), 2)
-    let yOffset = Math.pow(Math.abs(event.offsetY - startY), 2)
-    let offset = Math.floor(Math.sqrt(xOffset + yOffset))
+
+function polygonMousemove(event) {
+    const offset = getOffset(event)
 
     let points = ``
     
     for (let angleIndex = 0; angleIndex < anglesQuantity; angleIndex++) {
         let angleDegree = 360 / anglesQuantity * (angleIndex - 1)
-
 
         points += `${startX + offset * getSin(angleDegree + 180)} ${startY + offset * getCos(angleDegree + 180)},`
     }
@@ -117,10 +134,43 @@ function polygonMousemove(event) {
 }
 
 
+function lineMousedown(event) {
+    const html = `
+        <line 
+        x1="${startX}"
+        y1="${startY}"
+        x2="${startX + 1}"
+        y2="${startY + 1}"
+        id="${nowWorkingObjectId}" 
+        data-x="${startX}"
+        data-y="${startY}"
+        data-right="1337" />
+    `
+
+    drawingPlaceSvg.innerHTML += html
+
+    return {
+        html,
+        id: nowWorkingObjectId
+    }
+}
+
+
+
+function lineMousemove() {
+    nowWorkingObject.setAttribute("x2", event.offsetX)
+    nowWorkingObject.setAttribute("y2", event.offsetY)
+
+    return {
+        html: nowWorkingObject.outerHTML,
+        id: nowWorkingObjectId
+    }
+}
+
+
 
 function selectObject(target) {
     if(target.dataset.right !== "1337") return
-    //target.style.fill = "green"
 }
 
 
@@ -131,4 +181,10 @@ function getCos(degrees) {
 
 function getSin(degrees) {
     return (Math.sin(degrees * Math.PI/180))
+}
+
+function getOffset(event) {
+    const xOffset = Math.pow(Math.abs(event.offsetX - startX), 2)
+    const yOffset = Math.pow(Math.abs(event.offsetY - startY), 2)
+    return Math.floor(Math.sqrt(xOffset + yOffset))
 }

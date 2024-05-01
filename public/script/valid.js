@@ -26,11 +26,11 @@ function nameError(errorText, color) {
 function checkNameFunction(checkingName) {
     let errors = []
 
-    if ((typeof checkingName) !== "string") errors.push("Странное имя...")
-    if (!checkingName.match(/[a-z]/i)) errors.push("Иди учи английский")
-    if (!checkingName.match(/v/i)) errors.push("Я слишком люблю буву v")
-    if (!checkingName.match(/[а-я,ё]/i)) errors.push("Русский забыл :(")
-    if (!checkingName.match(/[0-9]/)) errors.push("Иметь цифры в имени не всем дано")
+    // if ((typeof checkingName) !== "string") errors.push("Странное имя...")
+    // if (!checkingName.match(/[a-z]/i)) errors.push("Иди учи английский")
+    // if (!checkingName.match(/v/i)) errors.push("Я слишком люблю буву v")
+    // if (!checkingName.match(/[а-я,ё]/i)) errors.push("Русский забыл :(")
+    // if (!checkingName.match(/[0-9]/)) errors.push("Иметь цифры в имени не всем дано")
 
     if (errors.length === 0) return [true, []]
     else return [false, errors.join("\n")]
