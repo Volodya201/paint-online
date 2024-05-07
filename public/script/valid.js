@@ -40,7 +40,7 @@ function checkNameFunction(checkingName) {
 
 form.addEventListener("submit", event => {
     const checkName = nameInput.value
-    const checkResults =  checkNameFunction(checkName)
+    const checkResults = checkNameFunction(checkName)
 
     if (!checkResults[0]) {
         event.preventDefault()
