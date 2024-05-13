@@ -51,7 +51,7 @@ let nowWorkingObject
 let nowWorkingObjectId
 let startX
 let startY
-rotation.init(getCoords(drawingPlaceSvg))
+//rotation.init(getCoords(drawingPlaceSvg))
 
 function generateRandomCode() {
     let code = ""
