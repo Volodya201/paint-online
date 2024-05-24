@@ -1,17 +1,23 @@
-
-
-
 const panelIcons = toolsPanel.querySelectorAll(".panel-icon")
 const panelTitles = toolsPanel.querySelectorAll(".panel-title")
 toolsPanel.addEventListener("mouseenter", PanelMouseenter)
 toolsPanel.addEventListener("mouseleave", PanelMouseleave)
 
-
-
-
-let inDetailsToollistBool = true
-
 const inDetailsToollist = document.getElementById("inDetailsToollist")
+
+
+let inDetailsToollistBool
+const inDetailsToollistBoolSaved = localStorage.getItem("inDetailsToollistBool")
+
+if (!inDetailsToollistBoolSaved) {
+    inDetailsToollistBool = true
+} else {
+    inDetailsToollistBool = JSON.parse(inDetailsToollistBoolSaved)
+    inDetailsToollist.checked = JSON.parse(inDetailsToollistBoolSaved)
+}
+
+
+
 
 inDetailsToollist.addEventListener("change", inDetailsToollistChange)
 
@@ -65,5 +71,6 @@ function PanelMouseleave(event) {
 
 function inDetailsToollistChange(event) {
     inDetailsToollistBool = inDetailsToollist.checked
+    localStorage.setItem("inDetailsToollistBool", inDetailsToollist.checked + "")
     if (!inDetailsToollistBool) PanelMouseleave()
 }

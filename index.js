@@ -17,12 +17,12 @@ const io = new Server(server)
 
 let users = []
 
-io.sockets.on('connection', socket => {
+io.on('connection', socket => {
 
-    socket.on("newUser", data => {
+    socket.on("newUser", (data) => {
         users.push(data.name)
         
-        io.sockets.emit("refreshUsers", {users})
+        io.emit("refreshUsers", {users})
     })
 
     socket.on("disconnectUser", data => {
@@ -30,16 +30,16 @@ io.sockets.on('connection', socket => {
         io.sockets.emit("refreshUsers", {users})
     })
 
-    socket.on("addFigure", (figure) => {
-        io.sockets.emit("addFigure", figure)
+    socket.on("addFigure", (figure, room) => {
+        io.emit("addFigure", figure)
     })
 
-    socket.on("editFigure", (figure) => {
-        io.sockets.emit("editFigure", figure)
+    socket.on("editFigure", (figure, room) => {
+        io.emit("editFigure", figure)
     })
 
-    socket.on("clearAll", () => {
-        io.sockets.emit("clearAll")
+    socket.on("clearAll", (room) => {
+        io.emit("clearAll")
     })
   
 })

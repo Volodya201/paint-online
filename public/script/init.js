@@ -1,99 +1,34 @@
-const blackout = document.getElementById("blackout")
-const settingsPopup = document.getElementById("settingsPopup")
-let isPopupOpen = false
-
-function openPopup() {
-    blackout.style.display = "block"
-    blackout.style.opacity = "1"
-
-    settingsPopup.style.display = "block"
-
-    isPopupOpen = true
-
-    blackout.addEventListener("click", closePopup) 
-}
-
-
-function closePopup(event) {
-    blackout.style.display = "none"
-    blackout.style.opacity = "0"
-
-    settingsPopup.style.display = "none"
-
-    isPopupOpen = false
-
-    blackout.removeEventListener("click", closePopup)
-}
-
-
-
-
-
-function getCoords(elem) {
-    let box = elem.getBoundingClientRect()
-  
-    return {
-      y: box.top + scrollY,
-      x: box.left + window.scrollX
-    }
-}
-
-
 const socket = io()
 
 const drawingPlaceSvg = document.getElementById("drawingPlaceSvg")
 const name = document.getElementById("name").innerText
+const room = document.getElementById("room").innerText
 const userList = document.getElementById("userList")
-let activeColor = "#000000"
-let activeStrokeColor = "#000000"
-let activeStrokeWidth = 0
-let anglesQuantity = 4
-
-const colorPickerSettings = {
-    classname: '',
-    theme: 'dark',
-    toggle: true,
-    popover: true,
-    position: 'left-end',
-    margin: 16,
-    preset: true,
-    color: '#000',
-    default: '#000',
-    disabled: false,
-    format: 'rgb',
-    singleInput: false,
-    inputs: {
-        rgb: true,
-        hex: true,
-        hsl: false,
-    },
-    opacity: true,
-    preview: true,
-    closeOnScroll: false,
-    copy: true,
-    swatches: ["#ff0000", "#00ff00", "#0000ff"],
-    toggleSwatches: false, 
-    shared: false, 
-    closeOnScroll: false,
+let mousedown = false
+let activeTool = "square"
+let userObjectsCounter = 1
+let nowWorkingObject
+let nowWorkingObjectId
+let startX
+let startY
+let lastEmit = 0
+const xmlns = "http://www.w3.org/2000/svg"
+const typeTranscript = {
+    "0": "rect",
+    "1": "rect", //rotated 
+    "2": "polygon",
+    "3": "ellipse",
+    "4": "ellipse", //rotated 
+    "5": "circle",
+    "6": "line",
+    "7": "path"
 }
 
 
-const colorPicker = new Alwan('#colorPicker', {...colorPickerSettings, id: 'colorPicker'})
-colorPicker.on('change', (color) => {activeColor = color.rgb})
 
-const strokeColorPicker = new Alwan('#strokeColorPicker', {...colorPickerSettings, id: 'strokeColorPicker'})
-strokeColorPicker.on('change', (color) => {activeStrokeColor = color.rgb})
-
-
-
-
-
-const strokeWidthChanger = document.getElementById("strokeWidthChanger")
-
-strokeWidthChanger.addEventListener("change", (event) => {
-    activeStrokeWidth = event.target.value
-})
-
-toolsPanel.addEventListener("mouseleave", () => {
-    strokeWidthChanger.blur()
-})
+const windowInnerHeight = window.innerHeight
+let drawingPlaceScale = 1
+while((windowInnerHeight * 0.9) <= (drawingPlaceSvg.clientHeight * drawingPlaceScale)) {
+    drawingPlaceScale -= 0.1
+    drawingPlaceSvg.style.scale = drawingPlaceScale
+}

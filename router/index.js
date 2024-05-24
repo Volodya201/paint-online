@@ -15,7 +15,8 @@ router.get("/settings", (req, res) => {
 
 router.post("/connect", urlencodedParser, (req, res) => {
     res.render("paintPlace", {
-        name: req.body.name
+        name: req.body.name,
+        room: req.body.room
     })
 })
 

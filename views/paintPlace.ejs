@@ -5,33 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Рисуйте вместе!</title>
     <link rel="stylesheet" href="/public/css/drawing.css">
+    <link rel="stylesheet" href="/public/css/inputs.css">
     <link rel="stylesheet" href="https://unpkg.com/alwan/dist/css/alwan.min.css">
     <script src="https://unpkg.com/alwan/dist/js/alwan.min.js"></script>
 </head>
 <body>
     <name id="name"><%= name %></name>
+    <room id="room"><%= room %></room>
     <div class="panel" id="toolsPanel"></div>
     <div class="drawing-place">
         <svg class="drawing-place-svg" id="drawingPlaceSvg"></svg>
     </div>
     <div class="user-list" id="userList"></div>
     <div id="colorPickerMenu"></div>
-    <div class="settings-popup" id="settingsPopup">
+
+    <div class="popup" id="settingsPopup">
         <h1 class="popup-title">Настройки</h1>
 
         <label class="checkbox" for="inDetailsToollist">
             <input class="checkbox-input" type="checkbox" id="inDetailsToollist" checked>
-            <span Class="checkbox-inner">Подробный toollist</span>
+            <span class="checkbox-inner">Подробный toollist</span>
         </label>
     </div>
+
+    <div class="popup" id="acceptPopup">
+        <h1 class="popup-title">Вы уверены?</h1>
+        <br>
+        <p class="popup-text">Данное действие <b>полностью очистит холст от всех фигур</b>, после подтверждения отменить его будет не возможно. Вы уверены?</p>
+        <br>
+        <div class="buttons">
+            <button class="popup-button cancel" onclick="closePopup(acceptPopup)">Отменить</button>
+            <button class="popup-button accept warning" onclick="socket.emit('clearAll'); closePopup(acceptPopup)">Подтвердить</button>
+        </div>
+    </div>
+
+    <div class="popup" id="uploadPopup">
+        <h1 class="popup-title">Загрузите json</h1>
+        <br>
+        <p class="popup-text">Вы можете загрузить json файл, сгенерированый этим сайтом или сервисом Geometrize</p>
+        <br>
+        <div>
+            <div class="popup-row">
+                <div>
+                    <label class="popup-text radio-label" for="uploadThis">
+                        Этот сайт
+                        <input class="radio-input" type="radio" id="uploadThis" name="upload-type">
+                        <span class="radio-span"></span>
+                    </label>
+                    <label class="popup-text radio-label" for="uploadGeometrize">
+                        Geometrize
+                        <input class="radio-input" type="radio" id="uploadGeometrize" name="upload-type" checked>
+                        <span class="radio-span"></span>
+                    </label>
+                </div>
+    
+                <div class="file">
+                    <div class="file-item">
+                      <input class="file-image" id="uploadFile" type="file" accept=".json">
+                      <div class="file-button" id="uploadFile">Выбрать<br>файл</div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <br>
+
+            <button class="popup-button accept" onclick="uploadConfirm()">Загрузить</button>
+            <p id="uploadError" style="color: red; font-weight: 700;"></p>
+        </div>
+        
+    </div>
+
+    <div class="popup" id="uploadPopup">
+        <h1 class="popup-title">Скачать рисунок</h1>
+        <br>
+        <p class="popup-text">Вы можете загрузить json файл, сгенерированый этим сайтом или сервисом Geometrize</p>
+    </div>
+
     <div class="blackout" id="blackout"></div>
-    <script src="/public/script/generateToolsPanel.js"></script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/public/script/init.js"></script>
+    <script src="/public/script/generateToolsPanel.js"></script>
+    <script src="/public/script/pickers.js"></script>
+    <script src="/public/script/functions.js"></script>
     <script src="/public/script/toolsPanel.js"></script>
-    <script src="/public/script/rotationFigures.js"></script>
     <script src="/public/script/toolsListeners.js"></script>
-    <script src="/public/script/paint.js" language="javascript"></script>
+    <script src="/public/script/popup.js"></script>
+    <script src="/public/script/undo.js"></script>
+    <script src="/public/script/paint.js"></script>
+    <script src="/public/script/fileUpload.js"></script>
+
+    <!-- <script src="/public/script/rotationFigures.js"></script> -->
 </body>
 </html>
 
