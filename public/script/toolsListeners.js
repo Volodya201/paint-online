@@ -1,21 +1,25 @@
-function squareMousedown(event) {
-    const html = `
-        <rect 
-        x="${event.offsetX}" 
-        y="${event.offsetY}" 
-        width="1" 
-        height="1" 
-        id="${nowWorkingObjectId}" 
-        data-x="${event.offsetX + 0.5}"
-        data-y="${event.offsetY + 0.5}"
-        data-right="1337" />
-    `
-    drawingPlaceSvg.innerHTML += html
-
-    return {
-        html,
+function squareMousedown(event, extraAttributes = {}) {
+    const squareConfig = {
+        type: 0,
+        attributes: {
+            x: event.offsetX,
+            y: event.offsetY,
+            width: 1,
+            height: 1,
+            id: nowWorkingObjectId,
+            ...extraAttributes
+        },
+        dataAttributes: {
+            x: event.offsetX + 0.5,
+            y: event.offsetY + 0.5,
+            right: 1337
+        },
         id: nowWorkingObjectId
     }
+
+    addFigure(squareConfig)
+
+    return squareConfig
 }
 
 function squareMousemove(event) {
@@ -56,28 +60,41 @@ function squareMousemove(event) {
     nowWorkingObject.dataset.y = centerY
 
     return {
-        html: nowWorkingObject.outerHTML,
+        attributes: {
+            x,
+            y,
+            width,
+            height,
+        },
+        dataAttributes: {
+            x: centerX,
+            y: centerY,
+        },
         id: nowWorkingObjectId
     }
 }
 
-function ellipseMousedown(event) {
-    const html = `
-        <circle 
-        cx="${startX}" 
-        cy="${startY}" 
-        r="1" 
-        id="${nowWorkingObjectId}" 
-        data-x="${startX}"
-        data-y="${startY}"
-        data-right="1337" />
-    `
-    drawingPlaceSvg.innerHTML += html
-
-    return {
-        html,
+function ellipseMousedown(event, extraAttributes = {}) {
+    const ellipseConfig = {
+        type: 5,
+        attributes: {
+            cx: startX,
+            cy: startY,
+            r: 1,
+            id: nowWorkingObjectId,
+            ...extraAttributes
+        },
+        dataAttributes: {
+            x: startX,
+            y: startY,
+            right: 1337
+        },
         id: nowWorkingObjectId
     }
+
+    addFigure(ellipseConfig)
+
+    return ellipseConfig
 }
 
 function ellipseMousemove(event) {
@@ -86,29 +103,34 @@ function ellipseMousemove(event) {
     nowWorkingObject.setAttribute("r", offset)
 
     return {
-        html: nowWorkingObject.outerHTML,
+        attributes: {
+            r: offset
+        },
         id: nowWorkingObjectId
     }
 }
 
 
 
-function polygonMousedown(event) {
-    const html = `
-        <polygon 
-        points="${startX + 1},${startY} ${startX},${startY + 1} ${startX + 1},${startY + 1}" 
-        id="${nowWorkingObjectId}" 
-        data-x="${startX}"
-        data-y="${startY}"
-        data-right="1337" />
-    `
-
-    drawingPlaceSvg.innerHTML += html
-
-    return {
-        html,
+function polygonMousedown(event, extraAttributes = {}) {
+    const polygonConfig = {
+        type: 2,
+        attributes: {
+            points: `${startX + 1},${startY} ${startX},${startY + 1} ${startX + 1},${startY + 1}`,
+            id: nowWorkingObjectId,
+            ...extraAttributes
+        },
+        dataAttributes: {
+            x: startX,
+            y: startY,
+            right: 1337
+        },
         id: nowWorkingObjectId
     }
+
+    addFigure(polygonConfig)
+
+    return polygonConfig
 }
 
 
@@ -128,41 +150,70 @@ function polygonMousemove(event) {
     nowWorkingObject.setAttribute("points", points)
 
     return {
-        html: nowWorkingObject.outerHTML,
+        attributes: {
+            points
+        },
         id: nowWorkingObjectId
     }
 }
 
 
-function lineMousedown(event) {
-    const html = `
-        <line 
-        x1="${startX}"
-        y1="${startY}"
-        x2="${startX + 1}"
-        y2="${startY + 1}"
-        id="${nowWorkingObjectId}" 
-        data-x="${startX}"
-        data-y="${startY}"
-        data-right="1337" />
-    `
-
-    drawingPlaceSvg.innerHTML += html
-
-    return {
-        html,
+function lineMousedown(event, extraAttributes = {}) {
+    const lineConfig = {
+        type: 6,
+        attributes: {
+            x1: startX,
+            y1: startY,
+            x2: startX + 1,
+            y2: startY + 1,
+            id: nowWorkingObjectId,
+            ...extraAttributes
+        },
+        dataAttributes: {
+            x: startX,
+            y: startY,
+            right: 1337
+        },
         id: nowWorkingObjectId
     }
+
+    addFigure(lineConfig)
+
+    return lineConfig
 }
 
 
 
-function lineMousemove() {
+function lineMousemove(event) {
     nowWorkingObject.setAttribute("x2", event.offsetX)
     nowWorkingObject.setAttribute("y2", event.offsetY)
 
     return {
-        html: nowWorkingObject.outerHTML,
+        attributes: {
+            x2: event.offsetX,
+            y2: event.offsetY
+        },
+        id: nowWorkingObjectId
+    }
+}
+
+
+function penEvents(event) {
+    nowWorkingObjectId = generateId()
+
+    const dot = document.createElementNS(xmlns, "circle")
+    dot.setAttribute("cx", event.offsetX)
+    dot.setAttribute("cy", event.offsetY)
+    dot.setAttribute("r", activeStrokeWidth)
+    dot.setAttribute("id", nowWorkingObjectId)
+    dot.dataset.x = event.offsetX
+    dot.dataset.y = event.offsetY
+    dot.dataset.right = "1337"
+
+    drawingPlaceSvg.appendChild(dot)
+
+    return {
+        element: dot,
         id: nowWorkingObjectId
     }
 }

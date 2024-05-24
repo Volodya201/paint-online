@@ -1,4 +1,6 @@
-socket.emit("newUser", {name: name})
+let ownFigures = []
+
+socket.emit("newUser", {name, room})
 
 socket.on("refreshUsers", data => {
     userList.innerHTML = ""
@@ -19,17 +21,14 @@ socket.on("addFigure", (figure) => {
     if (workingFigure) {
         return
     }
-    drawingPlaceSvg.innerHTML += figure.html
+
+    addFigure(figure)
 })
 
 socket.on("editFigure", (figure) => {
-    const workingFigure = document.getElementById(figure.id)
-    if (!workingFigure) {
-        // провести синхронизацию клиентов
-        return
-    }
-    workingFigure.remove()
-    drawingPlaceSvg.innerHTML += figure.html
+    if (ownFigures.find(id => id === figure.id)) return
+
+    editFigure(figure)
 })
 
 
@@ -40,55 +39,42 @@ window.onbeforeunload = event => {
 
 
 
-
-
-
-
-let mousedown = false
-let activeTool = "square"
-let userObjectsCounter = 1
-let nowWorkingObject
-let nowWorkingObjectId
-let startX
-let startY
-//rotation.init(getCoords(drawingPlaceSvg))
-
-function generateRandomCode() {
-    let code = ""
-    for (let index = 0; index < 6; index++) {
-        code += Math.floor(Math.random() * 10)
-    }
-
-    return Number(code)
-}
-
-
 drawingPlaceSvg.addEventListener("mousedown", event => {
     mousedown = true
     ++userObjectsCounter
-    nowWorkingObjectId = generateRandomCode()
+    nowWorkingObjectId = generateId()
     startX = event.offsetX
     startY = event.offsetY
+    const globalAttributes = {
+        "fill": activeColor,
+        "stroke": activeStrokeColor,
+        "stroke-width": activeStrokeWidth
+    }
 
-    if (activeTool === "square") socket.emit("addFigure", squareMousedown(event))
-    if (activeTool === "ellipse") socket.emit("addFigure", ellipseMousedown(event))
-    if (activeTool === "polygon") socket.emit("addFigure", polygonMousedown(event))
-    if (activeTool === "line") socket.emit("addFigure", lineMousedown(event))
+    if (activeTool === "square") socket.emit("addFigure", squareMousedown(event, globalAttributes), room)
+    if (activeTool === "ellipse") socket.emit("addFigure", ellipseMousedown(event, globalAttributes), room)
+    if (activeTool === "polygon") socket.emit("addFigure", polygonMousedown(event, globalAttributes), room)
+    if (activeTool === "line") socket.emit("addFigure", lineMousedown(event, globalAttributes), room)
+    if (activeTool === "pen") socket.emit("addFigure", penEvents(event, "mousedown"), room)
 
     nowWorkingObject = document.getElementById(nowWorkingObjectId)
 
-    nowWorkingObject.setAttribute("fill", activeColor)
-    nowWorkingObject.setAttribute("stroke", activeStrokeColor)
-    nowWorkingObject.setAttribute("stroke-width", activeStrokeWidth)
+    // ownFigures.push(nowWorkingObjectId)
+
+    // actionsStack.addAction({
+    //     id: nowWorkingObjectId,
+    //     html: ""
+    // })
 })
 
 drawingPlaceSvg.addEventListener("mousemove", event => {
     if (!mousedown) return
 
-    if (activeTool === "square") socket.emit("editFigure", squareMousemove(event))
-    if (activeTool === "ellipse") socket.emit("editFigure", ellipseMousemove(event))
-    if (activeTool === "polygon") socket.emit("editFigure", polygonMousemove(event))
-    if (activeTool === "line") socket.emit("editFigure", lineMousemove(event))
+    if (activeTool === "square") editFigureSend(squareMousemove(event), room)
+    if (activeTool === "ellipse") editFigureSend(ellipseMousemove(event), room)
+    if (activeTool === "polygon") editFigureSend(polygonMousemove(event), room)
+    if (activeTool === "line") editFigureSend(lineMousemove(event), room)
+    if (activeTool === "pen") socket.emit("addFigure", penEvents(event, "mousemove"), room)
     
 })
 
@@ -101,15 +87,15 @@ document.addEventListener("mouseup", event => {
             selectObject(event.target)
             break
         default:
-            rotation.show({
-                    center: {
-                        x: nowWorkingObject.dataset.x,
-                        y: nowWorkingObject.dataset.y
-                    }
-                },
-                getCoords(rotation.rotationSlider),
-                nowWorkingObject.dataset.rotation
-            )
+            // rotation.show({
+            //         center: {
+            //             x: nowWorkingObject.dataset.x,
+            //             y: nowWorkingObject.dataset.y
+            //         }
+            //     },
+            //     getCoords(rotation.rotationSlider),
+            //     nowWorkingObject.dataset.rotation
+            // )
             break
     }
 })
@@ -121,32 +107,36 @@ document.addEventListener("keypress", event => {
         case "KeyF":
             if (anglesQuantity >= 30) break
             anglesQuantity++
-            polygonMousemove(lastEvent)
             break
         case "KeyG":
             if (anglesQuantity < 3) anglesQuantity = 3 
             if (anglesQuantity <= 3) break
             anglesQuantity--
-            polygonMousemove(lastEvent)
             break
     }
 })
 
 
 function changeTool(toolName) {
-    if (toolName === "settings") {
-        openPopup()
-        return
-    }
-
-
     switch (toolName) {
         case "settings":
-            openPopup()
+            openPopup(settingsPopup)
             break
 
         case "clearAll":
-            socket.emit("clearAll")
+            openPopup(acceptPopup)
+            break
+
+        case "undo":
+            actionsStack.undo()
+            break
+
+        case "redo":
+            actionsStack.redo()
+            break
+
+        case "upload": 
+            openPopup(uploadPopup)
             break
 
         default:

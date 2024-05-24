@@ -1,4 +1,4 @@
-const rotation = {
+/*const rotation = {
     rotationElement: document.getElementById("rotation"),
     rotationController: document.querySelector("#rotationController"),
     rotationSlider: this.rotationController.querySelector("div"),
@@ -85,4 +85,4 @@ const rotation = {
 
 rotation.rotationSlider.addEventListener("mousedown", rotation.mousedown)
 document.addEventListener("mousemove", rotation.mousemove)
-document.addEventListener("mouseup", rotation.mouseup)
+document.addEventListener("mouseup", rotation.mouseup)*/

@@ -29,6 +29,26 @@ const tools = [
     //     title: "Выделение",
     //     iconSrc: "/public/textures/select.svg"
     // },
+    // {
+    //     name: "undo",
+    //     title: "Отменить",
+    //     iconSrc: "/public/textures/undo.svg"
+    // },
+    // {
+    //     name: "redo",
+    //     title: "Вернуть",
+    //     iconSrc: "/public/textures/redo.svg"
+    // },
+    // {
+    //     name: "download",
+    //     title: "Сохранить",
+    //     iconSrc: "/public/textures/download.svg"
+    // },
+    // {
+    //     name: "upload",
+    //     title: "Загрузить",
+    //     iconSrc: "/public/textures/upload.svg"
+    // },
     {
         name: "clearAll",
         title: "Стереть всё",
